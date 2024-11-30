@@ -8,6 +8,7 @@
 		let numberOfWin = sl(1, numberOfTarget - 1);
 		let answ = probability.pow(numberOfTarget - numberOfWin) * antiProbability.pow(numberOfWin);
 		genAssertZ1000(answ * 10000, 'Кривой ответ');
+		
 		let condition = ['последнюю', 'первую', 'вторую', 'третью', 'четвёртую'];
 		condition.splice(numberOfTarget+1,numberOfTarget);
 		switch (numberOfWin) {
@@ -55,5 +56,5 @@
 		});
 	});
 })();
-// 630095 630182
+// 63009501
 //SugarHedgehog
