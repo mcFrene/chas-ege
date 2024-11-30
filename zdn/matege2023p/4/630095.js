@@ -7,9 +7,11 @@
 		let numberOfTarget = sl(2, 4);
 		let numberOfWin = sl(1, numberOfTarget - 1);
 		let answ = probability.pow(numberOfWin) * antiProbability.pow(numberOfTarget - numberOfWin);
-		genAssertZ1000(answ * 10000, 'Кривой ответ');
+		genAssertZ1000(answ);
+		
 		let condition = ['последнюю', 'первую', 'вторую', 'третью', 'четвёртую'];
 		condition.splice(numberOfTarget+1,numberOfTarget);
+		
 		switch (numberOfWin) {
 		case 1:
 			condition = condition.iz();
@@ -46,6 +48,7 @@
 			condition += ' мишени';
 			break;
 		}
+		
 		NAtask.setTask({
 			text: 'Стрелок стреляет по одному разу в каждую из ' + numString[numberOfTarget - 2] + ' мишеней. ' +
 				'Вероятность попадания в мишень при каждом отдельном выстреле равна ' + probability.ts() + '. ' +
