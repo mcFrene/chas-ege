@@ -1,21 +1,3 @@
-lx['век'] = {
-	ie: 'век',
-	re: 'века',
-	de: 'веку',
-	ve: 'век',
-	te: 'веком',
-	pe: 'веке',
-	im: 'века',
-	rm: 'веков',
-	dm: 'векам',
-	vm: 'века',
-	tm: 'веками',
-	pm: 'веках',
-	rod: 0,
-	skl: 1,
-	odu: 1,
-	sbs: 1,
-};
 (function() {
 	retryWhileError(function() {
 		NAinfo.requireApiVersion(0, 2);
@@ -39,8 +21,8 @@ lx['век'] = {
 		let firstProbability = sl(0.5, 0.99, 0.01);
 		let secondProbability = sl(0.1, firstProbability - 0.01, 0.01);
 		NAtask.setTask({
-			text: 'Вероятность того, что ' + device[1] + ' ' + device[0] + ' прослужит больше ' + chislitlx(firstPeriod,
-					lengthOfTime) + ', равна ' + firstProbability.ts() + '. ' +
+			text: 'Вероятность того, что ' + device[1] + ' ' + device[0] + ' прослужит больше ' + chislitlx(firstPeriod,lengthOfTime) + 
+				', равна ' + firstProbability.ts() + '. ' +
 				'Вероятность того, что ' + device[2] + ' прослужит больше ' + chislitlx(secondPeriod, lengthOfTime) +
 				', равна ' + secondProbability.ts() + '. ' +
 				'Найдите вероятность того, что ' + device[2] + ' прослужит меньше ' + chislitlx(secondPeriod, lengthOfTime) +
