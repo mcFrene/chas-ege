@@ -1,46 +1,54 @@
 (function() {
-	function combination(k, n) {
-		return n.fct() / ((n - k).fct() * k.fct());
-	}
+    retryWhileError(function() {
+        NAinfo.requireApiVersion(0, 2);
 
-	retryWhileError(function() {
-		let number = sl(3, 5);
-		let color = om.trickyColors.iz(number);
+        let itemCount = sl(3, 5);
+        let colors = om.trickyColors.iz(itemCount);
 
-		let summary = sl(10, 50, 5);
-		let thing = sklonlxkand(['ластик', 'карандаш', 'шарик', 'бант', 'блокнот', 'значок', 'брелок', 'фломастер', ].iz());
-		let numberThungs = [];
-		let sklonThings = [];
+        let totalItems = sl(10, 50, 5);
+        let itemName = sklonlxkand(['ластик', 'карандаш', 'шарик', 'бант', 'блокнот', 'значок', 'брелок', 'фломастер'].iz());
+        let itemDistribution = [];
+        let adjectiveForms = [];
 
-		let sum = 0;
-		for (let i = 0; i < number - 1; i++) {
-			let num = sl(1, (summary / number).ceil());
-			numberThungs.push([color[i], num]);
-			sklonThings.push(declensionOfAdjectives(num, color[i]));
-			sum += num;
-		}
-		genAssert((summary - sum) > 0, 'Не хватило вещей');
-		numberThungs.push([color[number - 1], summary - sum]);
-		sklonThings.push(declensionOfAdjectives(summary - sum, color[number - 1]));
+        let currentSum = 0;
+        let maxItemsPerColor = Math.ceil(totalItems / itemCount);
 
-		let question = numberThungs.iz(2);
-		let m = sl(1, question[0][1]);
+        for (let i = 0; i < itemCount - 1; i++) {
+            let itemQuantity = sl(1, maxItemsPerColor);
+            itemDistribution.push([colors[i], itemQuantity]);
+            adjectiveForms.push(declensionOfAdjectives(itemQuantity, colors[i]));
+            currentSum += itemQuantity;
+        }
 
-		let n = sl(1, question[1][1]);
-		let answ = combination(m, question[0][1]) * combination(n, question[1][1]) / combination(m + n, summary);
+        let remainingItems = totalItems - currentSum;
+        genAssert(remainingItems > 0, 'Не хватило вещей');
+        itemDistribution.push([colors[itemCount - 1], remainingItems]);
+        adjectiveForms.push(declensionOfAdjectives(remainingItems, colors[itemCount - 1]));
 
-		genAssertZ1000(answ * 100, 'Слишком много знаков после запятой');
-		genAssert(answ>0.001)
+        let selectedItems = itemDistribution.iz(2);
+        let m = sl(1, selectedItems[0][1]);
+        let n = sl(1, selectedItems[1][1]);
 
-		NAinfo.requireApiVersion(0, 2);
-		NAtask.setTask({
-			text: 'В коробке ' + sklonThings.splice(0, number - 1).join(', ') + ' и ' + sklonThings[sklonThings.length - 1] +
-				' ' + chislit((summary - sum), thing.ie, thing.re, thing.rm) +
-				'. Случайным образом выбирают ' + chislitM((m + n), thing.ie, thing.re, thing.rm) + '.' +
-				' Какова вероятность того, что окажутся выбраны ' + declensionOfAdjectives(m, question[0][0]) + ' и ' +
-				declensionOfAdjectives(n, question[1][0]) + ' ' + chislit(n, thing.ie, thing.re, thing.rm) + '?',
-			answers: answ,
-			authors: ['Суматохина Александра'],
-		});
-	}, 1000);
+        let maxM = Math.max(m, selectedItems[0][1]);
+        let minM = Math.min(m, selectedItems[0][1]);
+        let maxN = Math.max(n, selectedItems[1][1]);
+        let minN = Math.min(n, selectedItems[1][1]);
+        let maxMN = Math.max(m + n, totalItems);
+        let minMN = Math.min(m + n, totalItems);
+
+        let probability = (math.combinations(maxM, minM) * math.combinations(maxN, minN)) / math.combinations(maxMN, minMN);
+
+        genAssertZ1000(probability * 100, 'Слишком много знаков после запятой');
+        genAssert(probability > 0.001, 'Ответ должен быть больше нуля');
+
+        NAtask.setTask({
+            text: `В коробке ${adjectiveForms.slice(0, itemCount - 1).join(', ')} и ${adjectiveForms[adjectiveForms.length - 1]} ` +
+                  `${chislit(remainingItems, itemName.ie, itemName.re, itemName.rm)}. Случайным образом выбирают ` +
+                  `${chislitM(m + n, itemName.ie, itemName.re, itemName.rm)}. Какова вероятность того, что окажутся выбраны ` +
+                  `${declensionOfAdjectives(m, selectedItems[0][0])} и ${declensionOfAdjectives(n, selectedItems[1][0])} ` +
+                  `${chislit(n, itemName.ie, itemName.re, itemName.rm)}?`,
+            answers: probability,
+            authors: ['Суматохина Александра'],
+        });
+    }, 1000);
 })();
